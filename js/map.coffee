@@ -133,7 +133,10 @@ CATMAP.load_map = (map_div_name) ->
   # map.addLayers [ sas1kmCh1SeLayer ]
   # sas1kmCh1SeLayer.setOpacity .5
 
-  for multiplier in [-2, -1, 0, 1, 2]
+  # multipliers = [-2, -1, 0, 1, 2]
+  multipliers = [-1, 0]
+
+  for multiplier in multipliers
     latLonBounds = [161.0289+(360*multiplier), -46.54, 178.9711+(360*multiplier), -32.76]
     mtsatBounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
 
