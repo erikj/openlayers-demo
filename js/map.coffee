@@ -179,7 +179,7 @@ CATMAP.load_map = (map_div_name) ->
       # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
 
       map.addLayers [ mtsat4kmLayer ]
-      mtsat4kmLayer.setOpacity .6
+      mtsat4kmLayer.setOpacity .5
 
   return map
 

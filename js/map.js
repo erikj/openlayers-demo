@@ -53,7 +53,7 @@
           wrapDateLine: true
         });
         map.addLayers([mtsat4kmLayer]);
-        mtsat4kmLayer.setOpacity(.6);
+        mtsat4kmLayer.setOpacity(.5);
       }
     }
     return map;
