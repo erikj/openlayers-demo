@@ -136,23 +136,50 @@ CATMAP.load_map = (map_div_name) ->
   # multipliers = [-2, -1, 0, 1, 2]
   multipliers = [-1, 0]
 
+  mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg']
+  # mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg']
+
   for multiplier in multipliers
-    latLonBounds = [161.0289+(360*multiplier), -46.54, 178.9711+(360*multiplier), -32.76]
-    mtsatBounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
+    # latLonBounds2km = [161.0289+(360*multiplier), -46.54, 178.9711+(360*multiplier), -32.76]
+    # mtsatBounds2km = new OpenLayers.Bounds(latLonBounds2km).transform(geoProj, mercProj)
 
-    mtsat2kmCh1Layer = new OpenLayers.Layer.Image(
-      "ops.MTSAT-2.201307242032.Hi-Res_ch1_vis.jpg (#{multiplier})",
-      'img/ops.MTSAT-2.201307242032.Hi-Res_ch1_vis.jpg',
-      mtsatBounds,
-      new OpenLayers.Size(2000,2000),
-        isBaseLayer:   false
-        alwaysInRange: true
-        wrapDateLine:  true
-      )
-    # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
+    # mtsat2kmCh1Layer = new OpenLayers.Layer.Image(
+    #   "ops.MTSAT-2.201307242032.Hi-Res_ch1_vis.jpg (#{multiplier})",
+    #   'img/ops.MTSAT-2.201307242032.Hi-Res_ch1_vis.jpg',
+    #   mtsatBounds2km,
+    #   new OpenLayers.Size(2000,2000),
+    #     isBaseLayer:   false
+    #     alwaysInRange: true
+    #     wrapDateLine:  true
+    #   )
+    # # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
 
-    map.addLayers [ mtsat2kmCh1Layer ]
-    mtsat2kmCh1Layer.setOpacity .5
+    # map.addLayers [ mtsat2kmCh1Layer ]
+    # mtsat2kmCh1Layer.setOpacity .5
+
+    # North: -17.84
+    # South: -63.04
+    # West: 130E
+    # East: 150W
+
+    latLonBounds4km = [130.5+(360*multiplier), -63.5, 360-150.5+(360*multiplier), -17.84]
+    mtsatBounds4km = new OpenLayers.Bounds(latLonBounds4km).transform(geoProj, mercProj)
+
+    for image in mtsat4kmImages
+
+      mtsat4kmLayer = new OpenLayers.Layer.Image(
+        image,
+        image,
+        mtsatBounds4km,
+        new OpenLayers.Size(2200,1800),
+          isBaseLayer:   false
+          alwaysInRange: true
+          wrapDateLine:  true
+        )
+      # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
+
+      map.addLayers [ mtsat4kmLayer ]
+      mtsat4kmLayer.setOpacity .6
 
   return map
 
