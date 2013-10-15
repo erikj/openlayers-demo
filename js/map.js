@@ -75,7 +75,7 @@
         });
       }
     }
-    latLonNexradBounds = [-104.65048, 38.06161, -102.14535, 41.625];
+    latLonNexradBounds = [-106.85465, 38.06161, -102.14535, 41.625];
     mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj);
     nexradImage = new OpenLayers.Layer.Image('img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif', 'img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif', mercNexradBounds, new OpenLayers.Size(779, 1007), {
       isBaseLayer: false,

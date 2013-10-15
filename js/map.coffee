@@ -208,9 +208,9 @@ CATMAP.load_map = (map_div_name) ->
     # N: 41.625
     # S: 38.06161
     # E: -102.14535
-    # W: -104.65048
+    # W: -106.85465
 
-  latLonNexradBounds = [-104.65048, 38.06161, -102.14535, 41.625]
+  latLonNexradBounds = [-106.85465, 38.06161, -102.14535, 41.625]
   mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj)
   nexradImage = new OpenLayers.Layer.Image(
       'img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif',
