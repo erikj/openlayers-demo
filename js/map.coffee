@@ -34,7 +34,22 @@ CATMAP.load_map = (map_div_name) ->
   layerSwitcher.maximizeControl()
   CATMAP.map = map
   # layer for open-streep maps
-  osm = new OpenLayers.Layer.OSM()
+
+  osmResolutions = [ 156543.03390625, 78271.516953125, 39135.7584765625,
+    19567.87923828125, 9783.939619140625, 4891.9698095703125,
+    2445.9849047851562, 1222.9924523925781, 611.4962261962891,
+    305.74811309814453, 152.87405654907226, 76.43702827453613,
+    38.218514137268066, 19.109257068634033, 9.554628534317017,
+    4.777314267158508, 2.388657133579254, 1.194328566789627,
+    0.5971642833948135 ]
+
+
+  # osm = new OpenLayers.Layer.OSM()
+  osm = new OpenLayers.Layer.OSM 'Open Street Map', null, {
+    resolutions:       osmResolutions,
+    serverResolutions: osmResolutions,
+    transitionEffect: 'resize' }
+
   map.addLayer osm
 
   # google-maps layers
@@ -49,9 +64,11 @@ CATMAP.load_map = (map_div_name) ->
 
   # boulder = new OpenLayers.LonLat -105.3, 40.028
   # salina  = new OpenLayers.LonLat -97.6459, 38.7871
-  christchurch = new OpenLayers.LonLat 172.620278, -43.53
+  # christchurch = new OpenLayers.LonLat 172.620278, -43.53
   # center  = boulder
-  center  = christchurch
+  # center  = christchurch
+  nexradCenter = new OpenLayers.LonLat -103, 39
+  center = nexradCenter
 
   map.setCenter center.transform(geoProj, mercProj), 5
 
@@ -62,6 +79,8 @@ CATMAP.load_map = (map_div_name) ->
   # kml layers
   kmlDir = "kml"
   # kmlFilenames = [ "betasso.kml", "boulder.kml", "flagstaff.kml", "gold-hill.kml", "mesa-lab.kml" ]
+  # kmlFilenames = [ "GV_flighttrack.kml", "gold-hill.kml" ]
+  kmlFilenames = []
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
 
@@ -71,19 +90,19 @@ CATMAP.load_map = (map_div_name) ->
   #   "ge.SMART-R.201205111750.NOXP_location.kml",
   #   "ge.NCAR_ISS.201205111652.location.kml" ]
 
-  # kmlLayers = []
+  kmlLayers = []
 
   # create kml layers
-  # for kmlFilename, i in kmlFilenames
-  #   kmlLayers.push new OpenLayers.Layer.Vector 'KML' #kmlFilename, kmlDir + "/" + kmlFilename,
-  #       strategies: [ new OpenLayers.Strategy.Fixed() ]
-  #       protocol: new OpenLayers.Protocol.HTTP
-  #           url:    kmlDir + "/" + kmlFilename
-  #           format: new OpenLayers.Format.KML
-  #               extractStyles: true
-  #               extractAttributes: true
+  for kmlFilename, i in kmlFilenames
+    kmlLayers.push new OpenLayers.Layer.Vector kmlFilename,
+        strategies: [ new OpenLayers.Strategy.Fixed() ]
+        protocol: new OpenLayers.Protocol.HTTP
+            url:    kmlDir + "/" + kmlFilename
+            format: new OpenLayers.Format.KML
+                extractStyles: true
+                extractAttributes: true
 
-  # map.addLayers kmlLayers
+  map.addLayers kmlLayers
 
   # create handlers for popups in kml layers
   # for kmlLayer in kmlLayers
@@ -178,9 +197,32 @@ CATMAP.load_map = (map_div_name) ->
         )
       # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
 
-      map.addLayers [ mtsat4kmLayer ]
-      mtsat4kmLayer.setOpacity .5
+      # map.addLayers [ mtsat4kmLayer ]
+      # mtsat4kmLayer.setOpacity .5
 
+
+
+    # Pixel Height: 1,007
+    # Pixel Width: 779
+    # The bounding box should be:
+    # N: 41.625
+    # S: 38.06161
+    # E: -102.14535
+    # W: -104.65048
+
+  latLonNexradBounds = [-104.65048, 38.06161, -102.14535, 41.625]
+  mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj)
+  nexradImage = new OpenLayers.Layer.Image(
+      'img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif',
+      'img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif',
+      mercNexradBounds,
+      new OpenLayers.Size(779,1007),
+        isBaseLayer:   false
+        alwaysInRange: true
+        wrapDateLine:  true
+      )
+  map.addLayers [nexradImage]
+  nexradImage.setOpacity .5
   return map
 
 

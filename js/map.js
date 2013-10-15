@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, christchurch, controls, geoProj, ghyb, gmap, gsat, gterr, image, kmlDir, latLonBounds4km, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, osm, _i, _j, _len, _len1;
+    var center, controls, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonNexradBounds, layerSwitcher, map, mercNexradBounds, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, nexradCenter, nexradImage, osm, osmResolutions, _i, _j, _k, _len, _len1, _len2;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -18,7 +18,12 @@
     });
     layerSwitcher.maximizeControl();
     CATMAP.map = map;
-    osm = new OpenLayers.Layer.OSM();
+    osmResolutions = [156543.03390625, 78271.516953125, 39135.7584765625, 19567.87923828125, 9783.939619140625, 4891.9698095703125, 2445.9849047851562, 1222.9924523925781, 611.4962261962891, 305.74811309814453, 152.87405654907226, 76.43702827453613, 38.218514137268066, 19.109257068634033, 9.554628534317017, 4.777314267158508, 2.388657133579254, 1.194328566789627, 0.5971642833948135];
+    osm = new OpenLayers.Layer.OSM('Open Street Map', null, {
+      resolutions: osmResolutions,
+      serverResolutions: osmResolutions,
+      transitionEffect: 'resize'
+    });
     map.addLayer(osm);
     gterr = new OpenLayers.Layer.Google("Google Terrain", {
       type: google.maps.MapTypeId.TERRAIN
@@ -35,27 +40,50 @@
       numZoomLevels: 22
     });
     map.addLayers([gterr, gmap, ghyb, gsat]);
-    christchurch = new OpenLayers.LonLat(172.620278, -43.53);
-    center = christchurch;
+    nexradCenter = new OpenLayers.LonLat(-103, 39);
+    center = nexradCenter;
     map.setCenter(center.transform(geoProj, mercProj), 5);
     kmlDir = "kml";
+    kmlFilenames = [];
+    kmlLayers = [];
+    for (i = _i = 0, _len = kmlFilenames.length; _i < _len; i = ++_i) {
+      kmlFilename = kmlFilenames[i];
+      kmlLayers.push(new OpenLayers.Layer.Vector(kmlFilename, {
+        strategies: [new OpenLayers.Strategy.Fixed()],
+        protocol: new OpenLayers.Protocol.HTTP({
+          url: kmlDir + "/" + kmlFilename,
+          format: new OpenLayers.Format.KML({
+            extractStyles: true,
+            extractAttributes: true
+          })
+        })
+      }));
+    }
+    map.addLayers(kmlLayers);
     multipliers = [-1, 0];
     mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg'];
-    for (_i = 0, _len = multipliers.length; _i < _len; _i++) {
-      multiplier = multipliers[_i];
+    for (_j = 0, _len1 = multipliers.length; _j < _len1; _j++) {
+      multiplier = multipliers[_j];
       latLonBounds4km = [130.5 + (360 * multiplier), -63.5, 360 - 150.5 + (360 * multiplier), -17.84];
       mtsatBounds4km = new OpenLayers.Bounds(latLonBounds4km).transform(geoProj, mercProj);
-      for (_j = 0, _len1 = mtsat4kmImages.length; _j < _len1; _j++) {
-        image = mtsat4kmImages[_j];
+      for (_k = 0, _len2 = mtsat4kmImages.length; _k < _len2; _k++) {
+        image = mtsat4kmImages[_k];
         mtsat4kmLayer = new OpenLayers.Layer.Image(image, image, mtsatBounds4km, new OpenLayers.Size(2200, 1800), {
           isBaseLayer: false,
           alwaysInRange: true,
           wrapDateLine: true
         });
-        map.addLayers([mtsat4kmLayer]);
-        mtsat4kmLayer.setOpacity(.5);
       }
     }
+    latLonNexradBounds = [-104.65048, 38.06161, -102.14535, 41.625];
+    mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj);
+    nexradImage = new OpenLayers.Layer.Image('img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif', 'img/ops.NEXRAD.201310151535.l2_KFTG_Reflectivity.gif', mercNexradBounds, new OpenLayers.Size(779, 1007), {
+      isBaseLayer: false,
+      alwaysInRange: true,
+      wrapDateLine: true
+    });
+    map.addLayers([nexradImage]);
+    nexradImage.setOpacity(.5);
     return map;
   };
 
