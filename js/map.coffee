@@ -70,7 +70,7 @@ CATMAP.load_map = (map_div_name) ->
   nexradCenter = new OpenLayers.LonLat -103, 39
   center = nexradCenter
 
-  map.setCenter center.transform(geoProj, mercProj), 5
+  map.setCenter center.transform(geoProj, mercProj), 7
 
   # kml-layer styling
   # colors = [ 'ff0000', '00ff00', '0000ff', 'ffd700', 'ff00ff', '00ffff' ]

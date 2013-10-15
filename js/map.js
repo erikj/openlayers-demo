@@ -42,7 +42,7 @@
     map.addLayers([gterr, gmap, ghyb, gsat]);
     nexradCenter = new OpenLayers.LonLat(-103, 39);
     center = nexradCenter;
-    map.setCenter(center.transform(geoProj, mercProj), 5);
+    map.setCenter(center.transform(geoProj, mercProj), 7);
     kmlDir = "kml";
     kmlFilenames = [];
     kmlLayers = [];
