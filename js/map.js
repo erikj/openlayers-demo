@@ -42,7 +42,7 @@
     map.addLayers([gterr, gmap, ghyb, gsat]);
     darwin = new OpenLayers.LonLat(130.833, -12.45);
     center = darwin;
-    map.setCenter(center.transform(geoProj, mercProj), 7);
+    map.setCenter(center.transform(geoProj, mercProj), 5);
     kmlDir = "kml";
     kmlFilenames = [];
     kmlLayers = [];

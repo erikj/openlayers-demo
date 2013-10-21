@@ -72,7 +72,7 @@ CATMAP.load_map = (map_div_name) ->
   darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
   center = darwin
 
-  map.setCenter center.transform(geoProj, mercProj), 7
+  map.setCenter center.transform(geoProj, mercProj), 5
 
   # kml-layer styling
   # colors = [ 'ff0000', '00ff00', '0000ff', 'ffd700', 'ff00ff', '00ffff' ]
