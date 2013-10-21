@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonNexradBounds, layerSwitcher, map, mercNexradBounds, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, nexradCenter, nexradImage, osm, osmResolutions, _i, _j, _k, _len, _len1, _len2;
+    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, hiwcImage, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonHiwcBounds, latLonNexradBounds, layerSwitcher, map, mercHiwcBounds, mercNexradBounds, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, nexradImage, osm, osmResolutions, _i, _j, _k, _len, _len1, _len2;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -40,8 +40,8 @@
       numZoomLevels: 22
     });
     map.addLayers([gterr, gmap, ghyb, gsat]);
-    nexradCenter = new OpenLayers.LonLat(-103, 39);
-    center = nexradCenter;
+    darwin = new OpenLayers.LonLat(130.833, -12.45);
+    center = darwin;
     map.setCenter(center.transform(geoProj, mercProj), 7);
     kmlDir = "kml";
     kmlFilenames = [];
@@ -84,6 +84,15 @@
     });
     map.addLayers([nexradImage]);
     nexradImage.setOpacity(.5);
+    latLonHiwcBounds = [110, -20, 160, -5];
+    mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj);
+    hiwcImage = new OpenLayers.Layer.Image('img/hiwc-mercator-alpha.png', 'img/hiwc-mercator-alpha.png', mercHiwcBounds, new OpenLayers.Size(770, 232), {
+      isBaseLayer: false,
+      alwaysInRange: true,
+      wrapDateLine: true
+    });
+    map.addLayers([hiwcImage]);
+    hiwcImage.setOpacity(.5);
     return map;
   };
 

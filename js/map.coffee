@@ -67,8 +67,10 @@ CATMAP.load_map = (map_div_name) ->
   # christchurch = new OpenLayers.LonLat 172.620278, -43.53
   # center  = boulder
   # center  = christchurch
-  nexradCenter = new OpenLayers.LonLat -103, 39
-  center = nexradCenter
+  # nexradCenter = new OpenLayers.LonLat -103, 39
+  # center = nexradCenter
+  darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
+  center = darwin
 
   map.setCenter center.transform(geoProj, mercProj), 7
 
@@ -223,6 +225,27 @@ CATMAP.load_map = (map_div_name) ->
       )
   map.addLayers [nexradImage]
   nexradImage.setOpacity .5
+
+  # N: 5 S
+  # S: 20S
+  # W: 110 E
+  # E: 160 E
+
+  latLonHiwcBounds = [110, -20, 160, -5]
+
+  mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj)
+  hiwcImage = new OpenLayers.Layer.Image(
+      'img/hiwc-mercator-alpha.png',
+      'img/hiwc-mercator-alpha.png',
+      mercHiwcBounds,
+      new OpenLayers.Size(770,232),
+        isBaseLayer:   false
+        alwaysInRange: true
+        wrapDateLine:  true
+      )
+  map.addLayers [hiwcImage]
+  hiwcImage.setOpacity .5
+
   return map
 
 
