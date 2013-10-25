@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, hiwcImage, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonHiwcBounds, latLonNexradBounds, layerSwitcher, map, mercHiwcBounds, mercNexradBounds, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, nexradImage, osm, osmResolutions, _i, _j, _k, _len, _len1, _len2;
+    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, hiwcImage, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonHiwcBounds, layerSwitcher, map, mercHiwcBounds, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, osm, osmResolutions, _i, _j, _k, _len, _len1, _len2;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -42,7 +42,7 @@
     map.addLayers([gterr, gmap, ghyb, gsat]);
     darwin = new OpenLayers.LonLat(130.833, -12.45);
     center = darwin;
-    map.setCenter(center.transform(geoProj, mercProj), 5);
+    map.setCenter(center.transform(geoProj, mercProj), 6);
     kmlDir = "kml";
     kmlFilenames = [];
     kmlLayers = [];
@@ -75,18 +75,9 @@
         });
       }
     }
-    latLonNexradBounds = [-106.85465, 38.06161, -102.14535, 41.625];
-    mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj);
-    nexradImage = new OpenLayers.Layer.Image('img/ops.NEXRAD.201310151939.l2_KFTG_Reflectivity.gif', 'img/ops.NEXRAD.201310151939.l2_KFTG_Reflectivity.gif', mercNexradBounds, new OpenLayers.Size(779, 1007), {
-      isBaseLayer: false,
-      alwaysInRange: true,
-      wrapDateLine: true
-    });
-    map.addLayers([nexradImage]);
-    nexradImage.setOpacity(.5);
     latLonHiwcBounds = [110, -20, 160, -5];
     mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj);
-    hiwcImage = new OpenLayers.Layer.Image('img/hiwc-mercator-alpha.png', 'img/hiwc-mercator-alpha.png', mercHiwcBounds, new OpenLayers.Size(770, 232), {
+    hiwcImage = new OpenLayers.Layer.Image('img/hiwc-mercator-alpha-2.png', 'img/hiwc-mercator-alpha-2.png', mercHiwcBounds, new OpenLayers.Size(770, 232), {
       isBaseLayer: false,
       alwaysInRange: true,
       wrapDateLine: true

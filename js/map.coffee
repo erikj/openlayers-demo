@@ -72,7 +72,7 @@ CATMAP.load_map = (map_div_name) ->
   darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
   center = darwin
 
-  map.setCenter center.transform(geoProj, mercProj), 5
+  map.setCenter center.transform(geoProj, mercProj), 6
 
   # kml-layer styling
   # colors = [ 'ff0000', '00ff00', '0000ff', 'ffd700', 'ff00ff', '00ffff' ]
@@ -212,19 +212,19 @@ CATMAP.load_map = (map_div_name) ->
     # E: -102.14535
     # W: -106.85465
 
-  latLonNexradBounds = [-106.85465, 38.06161, -102.14535, 41.625]
-  mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj)
-  nexradImage = new OpenLayers.Layer.Image(
-      'img/ops.NEXRAD.201310151939.l2_KFTG_Reflectivity.gif',
-      'img/ops.NEXRAD.201310151939.l2_KFTG_Reflectivity.gif',
-      mercNexradBounds,
-      new OpenLayers.Size(779,1007),
-        isBaseLayer:   false
-        alwaysInRange: true
-        wrapDateLine:  true
-      )
-  map.addLayers [nexradImage]
-  nexradImage.setOpacity .5
+  # latLonNexradBounds = [-106.85465, 38.06161, -102.14535, 41.625]
+  # mercNexradBounds = new OpenLayers.Bounds(latLonNexradBounds).transform(geoProj, mercProj)
+  # nexradImage = new OpenLayers.Layer.Image(
+  #     'img/ops.NEXRAD.201310151939.l2_KFTG_Reflectivity.gif',
+  #     'img/ops.NEXRAD.201310151939.l2_KFTG_Reflectivity.gif',
+  #     mercNexradBounds,
+  #     new OpenLayers.Size(779,1007),
+  #       isBaseLayer:   false
+  #       alwaysInRange: true
+  #       wrapDateLine:  true
+  #     )
+  # map.addLayers [nexradImage]
+  # nexradImage.setOpacity .5
 
   # N: 5 S
   # S: 20S
@@ -235,8 +235,8 @@ CATMAP.load_map = (map_div_name) ->
 
   mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj)
   hiwcImage = new OpenLayers.Layer.Image(
-      'img/hiwc-mercator-alpha.png',
-      'img/hiwc-mercator-alpha.png',
+      'img/hiwc-mercator-alpha-2.png',
+      'img/hiwc-mercator-alpha-2.png',
       mercHiwcBounds,
       new OpenLayers.Size(770,232),
         isBaseLayer:   false
