@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, hiwcImage, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonHiwcBounds, layerSwitcher, map, mercHiwcBounds, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, osm, osmResolutions, _i, _j, _k, _len, _len1, _len2;
+    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _len, _len1, _len2;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -41,7 +41,8 @@
     });
     map.addLayers([gterr, gmap, ghyb, gsat]);
     darwin = new OpenLayers.LonLat(130.833, -12.45);
-    center = darwin;
+    oswego = new OpenLayers.LonLat(-76.5, 43.45);
+    center = oswego;
     map.setCenter(center.transform(geoProj, mercProj), 6);
     kmlDir = "kml";
     kmlFilenames = [];
@@ -75,15 +76,15 @@
         });
       }
     }
-    latLonHiwcBounds = [110, -20, 160, -5];
-    mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj);
-    hiwcImage = new OpenLayers.Layer.Image('img/hiwc-mercator-alpha-2.png', 'img/hiwc-mercator-alpha-2.png', mercHiwcBounds, new OpenLayers.Size(770, 232), {
+    latLonOwlesGoesBounds = [-84.0830386349909, 38.8520916019916, -71.1603613650091, 48.1931765247953];
+    owlesGoesBounds = new OpenLayers.Bounds(latLonOwlesGoesBounds).transform(geoProj, mercProj);
+    owlesGoesImage = new OpenLayers.Layer.Image('img/ops.GOES-13.201310282002.1km_ch1_vis.jpg', 'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg', owlesGoesBounds, new OpenLayers.Size(800, 800), {
       isBaseLayer: false,
       alwaysInRange: true,
       wrapDateLine: true
     });
-    map.addLayers([hiwcImage]);
-    hiwcImage.setOpacity(.5);
+    map.addLayers([owlesGoesImage]);
+    owlesGoesImage.setOpacity(.5);
     return map;
   };
 

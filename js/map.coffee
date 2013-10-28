@@ -70,7 +70,8 @@ CATMAP.load_map = (map_div_name) ->
   # nexradCenter = new OpenLayers.LonLat -103, 39
   # center = nexradCenter
   darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
-  center = darwin
+  oswego = new OpenLayers.LonLat -76.5, 43.45 # 43°27′17″N 76°30′24″W
+  center = oswego
 
   map.setCenter center.transform(geoProj, mercProj), 6
 
@@ -231,20 +232,42 @@ CATMAP.load_map = (map_div_name) ->
   # W: 110 E
   # E: 160 E
 
-  latLonHiwcBounds = [110, -20, 160, -5]
+  # latLonHiwcBounds = [110, -20, 160, -5]
 
-  mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj)
-  hiwcImage = new OpenLayers.Layer.Image(
-      'img/hiwc-mercator-alpha-2.png',
-      'img/hiwc-mercator-alpha-2.png',
-      mercHiwcBounds,
-      new OpenLayers.Size(770,232),
+  # mercHiwcBounds = new OpenLayers.Bounds(latLonHiwcBounds).transform(geoProj, mercProj)
+  # hiwcImage = new OpenLayers.Layer.Image(
+  #     'img/hiwc-mercator-alpha-2.png',
+  #     'img/hiwc-mercator-alpha-2.png',
+  #     mercHiwcBounds,
+  #     new OpenLayers.Size(770,232),
+  #       isBaseLayer:   false
+  #       alwaysInRange: true
+  #       wrapDateLine:  true
+  #     )
+  # map.addLayers [hiwcImage]
+  # hiwcImage.setOpacity .5
+
+
+  # N: 48.1931765247953
+  # S: 38.8520916019916
+  # E: -71.1603613650091
+  # W: -84.0830386349909
+
+  latLonOwlesGoesBounds = [-84.0830386349909,38.8520916019916,-71.1603613650091,48.1931765247953]
+  owlesGoesBounds = new OpenLayers.Bounds(latLonOwlesGoesBounds).transform(geoProj, mercProj)
+  owlesGoesImage  = new OpenLayers.Layer.Image(
+      'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg',
+      'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg',
+      owlesGoesBounds,
+      new OpenLayers.Size(800,800),
         isBaseLayer:   false
         alwaysInRange: true
         wrapDateLine:  true
       )
-  map.addLayers [hiwcImage]
-  hiwcImage.setOpacity .5
+  map.addLayers [owlesGoesImage]
+  owlesGoesImage.setOpacity .5
+
+
 
   return map
 
