@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _len, _len1, _len2;
+    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, ocm, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _len, _len1, _len2;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -25,6 +25,8 @@
       transitionEffect: 'resize'
     });
     map.addLayer(osm);
+    ocm = new OpenLayers.Layer.OSM("OpenCycleMap", ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png", "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png", "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]);
+    map.addLayer(ocm);
     gterr = new OpenLayers.Layer.Google("Google Terrain", {
       type: google.maps.MapTypeId.TERRAIN
     });
@@ -45,7 +47,7 @@
     center = oswego;
     map.setCenter(center.transform(geoProj, mercProj), 6);
     kmlDir = "kml";
-    kmlFilenames = [];
+    kmlFilenames = ['ge.DOW6.201312061818.DBZ_radar_only.kml', 'ge.DOW7.201311280108.RHOHV_radar_only.kml'];
     kmlLayers = [];
     for (i = _i = 0, _len = kmlFilenames.length; _i < _len; i = ++_i) {
       kmlFilename = kmlFilenames[i];

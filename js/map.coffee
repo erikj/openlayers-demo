@@ -52,6 +52,22 @@ CATMAP.load_map = (map_div_name) ->
 
   map.addLayer osm
 
+  # ocm = OpenLayers.Layer.OSM("OpenCycleMap",
+  # ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+  #  "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+  #  "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]
+
+
+  ocm = new OpenLayers.Layer.OSM "OpenCycleMap",
+    [
+      "http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+      "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+      "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"
+    ]
+
+  map.addLayer ocm
+
+
   # google-maps layers
   # based on http://openlayers.org/dev/examples/google-v3.html
   # docs: http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Google-js.html
@@ -83,7 +99,10 @@ CATMAP.load_map = (map_div_name) ->
   kmlDir = "kml"
   # kmlFilenames = [ "betasso.kml", "boulder.kml", "flagstaff.kml", "gold-hill.kml", "mesa-lab.kml" ]
   # kmlFilenames = [ "GV_flighttrack.kml", "gold-hill.kml" ]
-  kmlFilenames = []
+  # kmlFilenames = []
+
+  kmlFilenames = ['ge.DOW6.201312061818.DBZ_radar_only.kml', 'ge.DOW7.201311280108.RHOHV_radar_only.kml']
+
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
 
