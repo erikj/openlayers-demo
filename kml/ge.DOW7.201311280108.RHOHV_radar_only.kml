@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+  <Document>
+    <name>OWLeS Radar Images</name>
+    <open>1</open>
+    <Folder>
+     <name>DOW7</name>
+     <GroundOverlay>
+        <name>DOW7</name>
+        <Icon>
+          <href>http://catalog.eol.ucar.edu/owles/research/DOW7/20131128/01/research.DOW7.201311280108.RHOHV_radar_only.png</href>
+          <refreshMode>onInterval</refreshMode>
+          <refreshInterval>120</refreshInterval>
+        </Icon>
+        <visibility>1</visibility>
+        <LatLonBox>
+          <north> 40.6532  </north>
+          <south> 39.4152  </south>
+          <east> -104.335  </east>
+          <west> -106.036  </west>
+        </LatLonBox>
+     </GroundOverlay>
+     </Folder>
+  </Document>
+</kml>

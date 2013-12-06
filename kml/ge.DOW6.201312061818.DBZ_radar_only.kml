@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+  <Document>
+    <name>OWLeS Radar Images</name>
+    <open>1</open>
+    <Folder>
+     <name>DOW6</name>
+     <GroundOverlay>
+        <name>DOW6</name>
+        <Icon>
+          <href>http://catalog.eol.ucar.edu/owles/research/dow6/20131206/18/research.DOW6.201312061818.DBZ_radar_only.png</href>
+          <refreshMode>onInterval</refreshMode>
+          <refreshInterval>120</refreshInterval>
+        </Icon>
+        <visibility>1</visibility>
+        <LatLonBox>
+          <north> 40.6542  </north>
+          <south> 39.4162  </south>
+          <east> -104.348  </east>
+          <west> -106.049  </west>
+        </LatLonBox>
+     </GroundOverlay>
+     </Folder>
+  </Document>
+</kml>
