@@ -116,7 +116,8 @@ CATMAP.load_map = (map_div_name) ->
 
   # create kml layers
   for kmlFilename, i in kmlFilenames
-    kmlUrl = "http://localhost/projects/openlayers-demo/#{kmlDir}/#{kmlFilename}"
+    # create kmlUrl from window.location and relative path
+    kmlUrl = "#{window.location['href'].replace(/\/[^\/]*$/, '/')}#{kmlDir}/#{kmlFilename}"
 
     # TODO: check for groundoverlays and add as image layers, as needed
 
@@ -148,6 +149,7 @@ CATMAP.load_map = (map_div_name) ->
               bounds = "#{west},#{south},#{east},#{north}"
             console.log "iconHref: #{iconHref}"
             console.log "bounds: #{bounds}"
+            # TODO: add image layers, based on bounds and iconHref
           else
             console.log "#{request.status} ERROR: #{request.responseText}"
 

@@ -50,7 +50,7 @@
     kmlLayers = [];
     for (i = _i = 0, _len = kmlFilenames.length; _i < _len; i = ++_i) {
       kmlFilename = kmlFilenames[i];
-      kmlUrl = "http://localhost/projects/openlayers-demo/" + kmlDir + "/" + kmlFilename;
+      kmlUrl = "" + (window.location['href'].replace(/\/[^\/]*$/, '/')) + kmlDir + "/" + kmlFilename;
       OpenLayers.Request.GET({
         url: kmlUrl,
         callback: function(response) {
