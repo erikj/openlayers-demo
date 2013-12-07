@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, ocm, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _len, _len1, _len2;
+    var center, controls, darwin, geoProj, ghyb, gmap, gsat, gterr, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, kmlUrl, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, ocm, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _len, _len1, _len2;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -41,7 +41,6 @@
       type: google.maps.MapTypeId.SATELLITE,
       numZoomLevels: 22
     });
-    map.addLayers([gterr, gmap, ghyb, gsat]);
     darwin = new OpenLayers.LonLat(130.833, -12.45);
     oswego = new OpenLayers.LonLat(-76.5, 43.45);
     center = oswego;
@@ -51,6 +50,43 @@
     kmlLayers = [];
     for (i = _i = 0, _len = kmlFilenames.length; _i < _len; i = ++_i) {
       kmlFilename = kmlFilenames[i];
+      kmlUrl = "http://localhost/projects/openlayers-demo/" + kmlDir + "/" + kmlFilename;
+      OpenLayers.Request.GET({
+        url: kmlUrl,
+        callback: function(response) {
+          var bounds, east, eastElement, element, groundOverlayElements, iconElement, iconHref, iconHrefElement, kmlDom, latLonBoxElement, north, northElement, south, southElement, west, westElement, xmlParser, _j, _len1;
+
+          if (response.status === 200) {
+            xmlParser = new OpenLayers.Format.XML();
+            kmlDom = xmlParser.read(response.responseText);
+            console.log('here');
+            groundOverlayElements = xmlParser.getElementsByTagNameNS(kmlDom, "*", "GroundOverlay");
+            console.log('here2');
+            for (_j = 0, _len1 = groundOverlayElements.length; _j < _len1; _j++) {
+              element = groundOverlayElements[_j];
+              iconElement = xmlParser.getElementsByTagNameNS(element, '*', 'Icon')[0];
+              console.log('here3');
+              iconHrefElement = xmlParser.getElementsByTagNameNS(iconElement, '*', 'href')[0];
+              iconHref = iconHrefElement.firstChild.nodeValue;
+              latLonBoxElement = xmlParser.getElementsByTagNameNS(element, '*', 'LatLonBox')[0];
+              northElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'north')[0];
+              southElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'south')[0];
+              eastElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'east')[0];
+              westElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'west')[0];
+              north = northElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '');
+              console.log(northElement);
+              south = southElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '');
+              east = eastElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '');
+              west = westElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '');
+              bounds = "" + west + "," + south + "," + east + "," + north;
+            }
+            console.log("iconHref: " + iconHref);
+            return console.log("bounds: " + bounds);
+          } else {
+            return console.log("" + request.status + " ERROR: " + request.responseText);
+          }
+        }
+      });
       kmlLayers.push(new OpenLayers.Layer.Vector(kmlFilename, {
         strategies: [new OpenLayers.Strategy.Fixed()],
         protocol: new OpenLayers.Protocol.HTTP({

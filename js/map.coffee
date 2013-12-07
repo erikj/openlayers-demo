@@ -76,7 +76,7 @@ CATMAP.load_map = (map_div_name) ->
   ghyb  = new OpenLayers.Layer.Google "Google Hybrid",    { type: google.maps.MapTypeId.HYBRID,    numZoomLevels: 20 }
   gsat  = new OpenLayers.Layer.Google "Google Satellite", { type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22 }
 
-  map.addLayers [ gterr, gmap, ghyb, gsat ]
+  # map.addLayers [ gterr, gmap, ghyb, gsat ]
 
   # boulder = new OpenLayers.LonLat -105.3, 40.028
   # salina  = new OpenLayers.LonLat -97.6459, 38.7871
@@ -116,6 +116,42 @@ CATMAP.load_map = (map_div_name) ->
 
   # create kml layers
   for kmlFilename, i in kmlFilenames
+    kmlUrl = "http://localhost/projects/openlayers-demo/#{kmlDir}/#{kmlFilename}"
+
+    # TODO: check for groundoverlays and add as image layers, as needed
+
+    OpenLayers.Request.GET
+        url: kmlUrl
+        callback: (response)->
+          if response.status==200
+            # parse response.responseText
+            xmlParser = new OpenLayers.Format.XML()
+            kmlDom = xmlParser.read(response.responseText)
+            console.log 'here'
+            groundOverlayElements = xmlParser.getElementsByTagNameNS(kmlDom, "*", "GroundOverlay")
+            console.log 'here2'
+            for element in groundOverlayElements
+              iconElement = xmlParser.getElementsByTagNameNS(element, '*', 'Icon')[0]
+              console.log 'here3'
+              iconHrefElement = xmlParser.getElementsByTagNameNS(iconElement, '*', 'href')[0]
+              iconHref = iconHrefElement.firstChild.nodeValue
+              latLonBoxElement = xmlParser.getElementsByTagNameNS(element, '*', 'LatLonBox')[0]
+              northElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'north')[0]
+              southElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'south')[0]
+              eastElement  = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'east' )[0]
+              westElement  = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'west' )[0]
+              north = northElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+              console.log northElement
+              south = southElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+              east = eastElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+              west = westElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+              bounds = "#{west},#{south},#{east},#{north}"
+            console.log "iconHref: #{iconHref}"
+            console.log "bounds: #{bounds}"
+          else
+            console.log "#{request.status} ERROR: #{request.responseText}"
+
+
     kmlLayers.push new OpenLayers.Layer.Vector kmlFilename,
         strategies: [ new OpenLayers.Strategy.Fixed() ]
         protocol: new OpenLayers.Protocol.HTTP
