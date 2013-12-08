@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+  <Document>
+    <name>OWLeS Radar Images</name>
+    <open>1</open>
+    <Folder>
+     <name>DOW7</name>
+     <GroundOverlay>
+        <name>DOW7</name>
+        <Icon>
+          <href>img/research.DOW7.201312071633.NCP_radar_only.png</href>
+        </Icon>
+        <visibility>1</visibility>
+        <LatLonBox>
+          <north> 43.9302  </north>
+          <south> 42.7543  </south>
+          <east> -75.8207  </east>
+          <west> -77.5218  </west>
+        </LatLonBox>
+     </GroundOverlay>
+     </Folder>
+  </Document>
+</kml>
