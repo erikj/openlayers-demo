@@ -16,7 +16,8 @@ CATMAP.load_map = (map_div_name) ->
   # projections
   geoProj  = new OpenLayers.Projection "EPSG:4326"
   mercProj = new OpenLayers.Projection "EPSG:900913"
-
+  CATMAP.geoProj = geoProj
+  CATMAP.mercProj = mercProj
   # initialize openlayers map
   layerSwitcher = new OpenLayers.Control.LayerSwitcher
   controls = [ #new OpenLayers.Control.MousePosition({displayProjection:geoProj})
@@ -71,10 +72,10 @@ CATMAP.load_map = (map_div_name) ->
   # google-maps layers
   # based on http://openlayers.org/dev/examples/google-v3.html
   # docs: http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Google-js.html
-  gterr = new OpenLayers.Layer.Google "Google Terrain",   { type: google.maps.MapTypeId.TERRAIN }
-  gmap  = new OpenLayers.Layer.Google "Google Streets",   { numZoomLevels: 20 }
-  ghyb  = new OpenLayers.Layer.Google "Google Hybrid",    { type: google.maps.MapTypeId.HYBRID,    numZoomLevels: 20 }
-  gsat  = new OpenLayers.Layer.Google "Google Satellite", { type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22 }
+  # gterr = new OpenLayers.Layer.Google "Google Terrain",   { type: google.maps.MapTypeId.TERRAIN }
+  # gmap  = new OpenLayers.Layer.Google "Google Streets",   { numZoomLevels: 20 }
+  # ghyb  = new OpenLayers.Layer.Google "Google Hybrid",    { type: google.maps.MapTypeId.HYBRID,    numZoomLevels: 20 }
+  # gsat  = new OpenLayers.Layer.Google "Google Satellite", { type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22 }
 
   # map.addLayers [ gterr, gmap, ghyb, gsat ]
 
@@ -101,7 +102,8 @@ CATMAP.load_map = (map_div_name) ->
   # kmlFilenames = [ "GV_flighttrack.kml", "gold-hill.kml" ]
   # kmlFilenames = []
 
-  kmlFilenames = ['ge.DOW6.201312061818.DBZ_radar_only.kml', 'ge.DOW7.201311280108.RHOHV_radar_only.kml']
+  # kmlFilenames = ['ge.DOW6.201312061818.DBZ_radar_only.kml', 'ge.DOW7.201311280108.RHOHV_radar_only.kml', 'ge.research.201205090000.N677F_flight_track.kml']
+  kmlFilenames = ['catmap.ge.DOW6.201312071606.NCP_radar_only.kml', 'catmap.ge.DOW7.201312071633.NCP_radar_only.kml']
 
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
@@ -119,48 +121,67 @@ CATMAP.load_map = (map_div_name) ->
     # create kmlUrl from window.location and relative path
     kmlUrl = "#{window.location['href'].replace(/\/[^\/]*$/, '/')}#{kmlDir}/#{kmlFilename}"
 
-    # TODO: check for groundoverlays and add as image layers, as needed
+    # check for groundoverlays and add as image layers, as needed
 
     OpenLayers.Request.GET
         url: kmlUrl
-        callback: (response)->
+        callback: (response, kmlUrl)->
           if response.status==200
             # parse response.responseText
             xmlParser = new OpenLayers.Format.XML()
             kmlDom = xmlParser.read(response.responseText)
-            console.log 'here'
             groundOverlayElements = xmlParser.getElementsByTagNameNS(kmlDom, "*", "GroundOverlay")
-            console.log 'here2'
-            for element in groundOverlayElements
-              iconElement = xmlParser.getElementsByTagNameNS(element, '*', 'Icon')[0]
-              console.log 'here3'
-              iconHrefElement = xmlParser.getElementsByTagNameNS(iconElement, '*', 'href')[0]
-              iconHref = iconHrefElement.firstChild.nodeValue
-              latLonBoxElement = xmlParser.getElementsByTagNameNS(element, '*', 'LatLonBox')[0]
-              northElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'north')[0]
-              southElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'south')[0]
-              eastElement  = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'east' )[0]
-              westElement  = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'west' )[0]
-              north = northElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
-              console.log northElement
-              south = southElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
-              east = eastElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
-              west = westElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
-              bounds = "#{west},#{south},#{east},#{north}"
-            console.log "iconHref: #{iconHref}"
-            console.log "bounds: #{bounds}"
-            # TODO: add image layers, based on bounds and iconHref
+            console.log groundOverlayElements.length
+            if groundOverlayElements.length < 1
+              # plain-old KML
+              # TODO: create KML layer, add to CATMAP.map
+              # console.log kmlUrl
+            else
+              for element in groundOverlayElements
+                iconElement = xmlParser.getElementsByTagNameNS(element, '*', 'Icon')[0]
+                iconHrefElement = xmlParser.getElementsByTagNameNS(iconElement, '*', 'href')[0]
+                iconHref = iconHrefElement.firstChild.nodeValue
+                latLonBoxElement = xmlParser.getElementsByTagNameNS(element, '*', 'LatLonBox')[0]
+                northElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'north')[0]
+                southElement = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'south')[0]
+                eastElement  = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'east' )[0]
+                westElement  = xmlParser.getElementsByTagNameNS(latLonBoxElement, '*', 'west' )[0]
+                # trim whitespace
+                north = northElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+                # console.log northElement
+                south = southElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+                east = eastElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+                west = westElement.firstChild.nodeValue.replace(/(^\s+|\s+$)/g, '')
+                # bounds = "#{west},#{south},#{east},#{north}"
+                console.log "iconHref: #{iconHref}"
+                # console.log "bounds: #{west},#{south},#{east},#{north}"
+                # add image layer, based on bounds and iconHref
+                latLonGroundOverlayBounds = [west,south,east,north]
+                groundOverlayBounds = new OpenLayers.Bounds(latLonGroundOverlayBounds).transform(CATMAP.geoProj, CATMAP.mercProj)
+                # get name from href's match characters after last slash
+                iconName = iconHref.match(/\/([^\/]*)$/)[1]
+                groundOverlayImage  = new OpenLayers.Layer.Image(
+                    iconName,
+                    iconHref,
+                    groundOverlayBounds,
+                    new OpenLayers.Size(800,800), # is this really used? this value is bogus
+                      isBaseLayer:   false
+                      alwaysInRange: true
+                      wrapDateLine:  true
+                    )
+                CATMAP.map.addLayers [groundOverlayImage]
+                groundOverlayImage.setOpacity .5
           else
             console.log "#{request.status} ERROR: #{request.responseText}"
 
 
-    kmlLayers.push new OpenLayers.Layer.Vector kmlFilename,
-        strategies: [ new OpenLayers.Strategy.Fixed() ]
-        protocol: new OpenLayers.Protocol.HTTP
-            url:    kmlDir + "/" + kmlFilename
-            format: new OpenLayers.Format.KML
-                extractStyles: true
-                extractAttributes: true
+    # kmlLayers.push new OpenLayers.Layer.Vector kmlFilename,
+    #     strategies: [ new OpenLayers.Strategy.Fixed() ]
+    #     protocol: new OpenLayers.Protocol.HTTP
+    #         url:    kmlDir + "/" + kmlFilename
+    #         format: new OpenLayers.Format.KML
+    #             extractStyles: true
+    #             extractAttributes: true
 
   map.addLayers kmlLayers
 
