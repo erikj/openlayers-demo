@@ -1,11 +1,16 @@
 all: js html
 
-js: js/map.js
+.PHONY: js html watch
+
+js: | js/map.js
+
+js/map.js: js/map.coffee
 	coffee -c js/map.coffee
 
-watch: js/map.js
+watch:
 	coffee -cw js/map.coffee &
 
+html: | index.html
 
-html: index.html
+index.html: index.haml
 	haml index.haml index.html
