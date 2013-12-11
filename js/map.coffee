@@ -186,14 +186,15 @@ CATMAP.load_map = (map_div_name) ->
                 extractStyles: true
                 extractAttributes: true
 
-  map.addLayers kmlLayers
-
   # create handlers for popups in kml layers
-  # for kmlLayer in kmlLayers
-  #   # http://dev.openlayers.org/releases/OpenLayers-2.11/examples/sundials.html
-  #   kmlLayer.events.on
-  #       "featureselected":   onFeatureSelect
-  #       "featureunselected": onFeatureUnselect
+  for kmlLayer in kmlLayers
+    console.log kmlLayer
+    # http://dev.openlayers.org/releases/OpenLayers-2.11/examples/sundials.html
+    kmlLayer.events.on
+        "featureselected":   onFeatureSelect
+        "featureunselected": onFeatureUnselect
+
+  map.addLayers kmlLayers
 
   # TODO: draw a line from Boulder to Salina
   # https://github.com/NCAR-Earth-Observing-Laboratory/catalog-maps/issues/69
@@ -215,9 +216,9 @@ CATMAP.load_map = (map_div_name) ->
 
   # map.addLayer lineLayer
 
-  # kmlSelector = new OpenLayers.Control.SelectFeature kmlLayers
-  # map.addControl kmlSelector
-  # kmlSelector.activate()
+  kmlSelector = new OpenLayers.Control.SelectFeature kmlLayers
+  map.addControl kmlSelector
+  kmlSelector.activate()
 
   # G14 1km: N: 41.876 S: 28.1227 E: -76.2822 W: -93.1523
   # sasGoesSeBounds = new OpenLayers.Bounds(-93.1523, 28.09, -76.26, 41.876).transform(geoProj, mercProj)

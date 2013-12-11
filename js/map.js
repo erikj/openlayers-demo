@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, darwin, geoProj, groundOverlayFilenames, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayers, kmlUrl, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, ocm, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _l, _len, _len1, _len2, _len3;
+    var center, controls, darwin, geoProj, groundOverlayFilenames, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, ocm, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -101,15 +101,26 @@
         })
       }));
     }
+    for (_k = 0, _len2 = kmlLayers.length; _k < _len2; _k++) {
+      kmlLayer = kmlLayers[_k];
+      console.log(kmlLayer);
+      kmlLayer.events.on({
+        "featureselected": onFeatureSelect,
+        "featureunselected": onFeatureUnselect
+      });
+    }
     map.addLayers(kmlLayers);
+    kmlSelector = new OpenLayers.Control.SelectFeature(kmlLayers);
+    map.addControl(kmlSelector);
+    kmlSelector.activate();
     multipliers = [-1, 0];
     mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg'];
-    for (_k = 0, _len2 = multipliers.length; _k < _len2; _k++) {
-      multiplier = multipliers[_k];
+    for (_l = 0, _len3 = multipliers.length; _l < _len3; _l++) {
+      multiplier = multipliers[_l];
       latLonBounds4km = [130.5 + (360 * multiplier), -63.5, 360 - 150.5 + (360 * multiplier), -17.84];
       mtsatBounds4km = new OpenLayers.Bounds(latLonBounds4km).transform(geoProj, mercProj);
-      for (_l = 0, _len3 = mtsat4kmImages.length; _l < _len3; _l++) {
-        image = mtsat4kmImages[_l];
+      for (_m = 0, _len4 = mtsat4kmImages.length; _m < _len4; _m++) {
+        image = mtsat4kmImages[_m];
         mtsat4kmLayer = new OpenLayers.Layer.Image(image, image, mtsatBounds4km, new OpenLayers.Size(2200, 1800), {
           isBaseLayer: false,
           alwaysInRange: true,
