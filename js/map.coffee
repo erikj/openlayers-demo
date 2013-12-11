@@ -100,10 +100,12 @@ CATMAP.load_map = (map_div_name) ->
   kmlDir = "kml"
   # kmlFilenames = [ "betasso.kml", "boulder.kml", "flagstaff.kml", "gold-hill.kml", "mesa-lab.kml" ]
   # kmlFilenames = [ "GV_flighttrack.kml", "gold-hill.kml" ]
-  # kmlFilenames = []
+
+  kmlFilenames = ['ge.facility_locations.201312111200.soundings.kml']
 
   # kmlFilenames = ['ge.DOW6.201312061818.DBZ_radar_only.kml', 'ge.DOW7.201311280108.RHOHV_radar_only.kml', 'ge.research.201205090000.N677F_flight_track.kml']
-  kmlFilenames = ['catmap.ge.DOW6.201312071606.NCP_radar_only.kml', 'catmap.ge.DOW7.201312071633.NCP_radar_only.kml']
+
+  groundOverlayFilenames = ['catmap.ge.DOW6.201312071606.NCP_radar_only.kml', 'catmap.ge.DOW7.201312071633.NCP_radar_only.kml']
 
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
@@ -117,7 +119,7 @@ CATMAP.load_map = (map_div_name) ->
   kmlLayers = []
 
   # create kml layers
-  for kmlFilename, i in kmlFilenames
+  for kmlFilename, i in groundOverlayFilenames
     # create kmlUrl from window.location and relative path
     kmlUrl = "#{window.location['href'].replace(/\/[^\/]*$/, '/')}#{kmlDir}/#{kmlFilename}"
 
@@ -174,14 +176,15 @@ CATMAP.load_map = (map_div_name) ->
           else
             console.log "#{request.status} ERROR: #{request.responseText}"
 
+  for kmlFilename, i in kmlFilenames
 
-    # kmlLayers.push new OpenLayers.Layer.Vector kmlFilename,
-    #     strategies: [ new OpenLayers.Strategy.Fixed() ]
-    #     protocol: new OpenLayers.Protocol.HTTP
-    #         url:    kmlDir + "/" + kmlFilename
-    #         format: new OpenLayers.Format.KML
-    #             extractStyles: true
-    #             extractAttributes: true
+    kmlLayers.push new OpenLayers.Layer.Vector kmlFilename,
+        strategies: [ new OpenLayers.Strategy.Fixed() ]
+        protocol: new OpenLayers.Protocol.HTTP
+            url:    kmlDir + "/" + kmlFilename
+            format: new OpenLayers.Format.KML
+                extractStyles: true
+                extractAttributes: true
 
   map.addLayers kmlLayers
 
