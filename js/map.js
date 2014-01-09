@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var center, controls, darwin, geoProj, groundOverlayFilenames, i, image, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, latLonBounds4km, latLonOwlesGoesBounds, layerSwitcher, map, mercProj, mtsat4kmImages, mtsat4kmLayer, mtsatBounds4km, multiplier, multipliers, ocm, osm, osmResolutions, oswego, owlesGoesBounds, owlesGoesImage, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m;
+    var bounds, center, controls, darwin, geoProj, groundOverlayFilenames, guam, i, image, imageLayer, images, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, latLonBounds, layerSwitcher, map, mercProj, mtsat4kmImages, multiplier, multipliers, ocm, osm, osmResolutions, oswego, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -24,18 +24,20 @@
     osm = new OpenLayers.Layer.OSM('Open Street Map', null, {
       resolutions: osmResolutions,
       serverResolutions: osmResolutions,
-      transitionEffect: 'resize'
+      transitionEffect: 'resize',
+      wrapDateLine: true
     });
     map.addLayer(osm);
     ocm = new OpenLayers.Layer.OSM("OpenCycleMap", ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png", "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png", "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]);
     map.addLayer(ocm);
     darwin = new OpenLayers.LonLat(130.833, -12.45);
     oswego = new OpenLayers.LonLat(-76.5, 43.45);
-    center = oswego;
+    guam = new OpenLayers.LonLat(144.8, 13.5);
+    center = guam;
     map.setCenter(center.transform(geoProj, mercProj), 6);
     kmlDir = "kml";
-    kmlFilenames = ['ge.facility_locations.201312111200.soundings.kml'];
-    groundOverlayFilenames = ['catmap.ge.DOW6.201312071606.NCP_radar_only.kml', 'catmap.ge.DOW7.201312071633.NCP_radar_only.kml'];
+    groundOverlayFilenames = [];
+    kmlFilenames = [];
     kmlLayers = [];
     for (i = _i = 0, _len = groundOverlayFilenames.length; _i < _len; i = ++_i) {
       kmlFilename = groundOverlayFilenames[i];
@@ -117,26 +119,20 @@
     mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg'];
     for (_l = 0, _len3 = multipliers.length; _l < _len3; _l++) {
       multiplier = multipliers[_l];
-      latLonBounds4km = [130.5 + (360 * multiplier), -63.5, 360 - 150.5 + (360 * multiplier), -17.84];
-      mtsatBounds4km = new OpenLayers.Bounds(latLonBounds4km).transform(geoProj, mercProj);
-      for (_m = 0, _len4 = mtsat4kmImages.length; _m < _len4; _m++) {
-        image = mtsat4kmImages[_m];
-        mtsat4kmLayer = new OpenLayers.Layer.Image(image, image, mtsatBounds4km, new OpenLayers.Size(2200, 1800), {
+      images = ['img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png'];
+      latLonBounds = [51.0857 + (360 * multiplier), -47.5559, 360 - 71.0857 + (360 * multiplier), 52.175];
+      bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj);
+      for (_m = 0, _len4 = images.length; _m < _len4; _m++) {
+        image = images[_m];
+        imageLayer = new OpenLayers.Layer.Image(image, image, bounds, new OpenLayers.Size(2200, 1800), {
           isBaseLayer: false,
           alwaysInRange: true,
           wrapDateLine: true
         });
+        map.addLayers([imageLayer]);
+        imageLayer.setOpacity(.5);
       }
     }
-    latLonOwlesGoesBounds = [-84.0830386349909, 38.8520916019916, -71.1603613650091, 48.1931765247953];
-    owlesGoesBounds = new OpenLayers.Bounds(latLonOwlesGoesBounds).transform(geoProj, mercProj);
-    owlesGoesImage = new OpenLayers.Layer.Image('img/ops.GOES-13.201310282002.1km_ch1_vis.jpg', 'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg', owlesGoesBounds, new OpenLayers.Size(800, 800), {
-      isBaseLayer: false,
-      alwaysInRange: true,
-      wrapDateLine: true
-    });
-    map.addLayers([owlesGoesImage]);
-    owlesGoesImage.setOpacity(.5);
     return map;
   };
 

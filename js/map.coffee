@@ -49,7 +49,8 @@ CATMAP.load_map = (map_div_name) ->
   osm = new OpenLayers.Layer.OSM 'Open Street Map', null, {
     resolutions:       osmResolutions,
     serverResolutions: osmResolutions,
-    transitionEffect: 'resize' }
+    transitionEffect: 'resize',
+    wrapDateLine:true }
 
   map.addLayer osm
 
@@ -88,7 +89,9 @@ CATMAP.load_map = (map_div_name) ->
   # center = nexradCenter
   darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
   oswego = new OpenLayers.LonLat -76.5, 43.45 # 43°27′17″N 76°30′24″W
-  center = oswego
+  # guam: 13.5000° N, 144.8000° E
+  guam = new OpenLayers.LonLat 144.8, 13.5
+  center = guam
 
   map.setCenter center.transform(geoProj, mercProj), 6
 
@@ -101,14 +104,18 @@ CATMAP.load_map = (map_div_name) ->
   # kmlFilenames = [ "betasso.kml", "boulder.kml", "flagstaff.kml", "gold-hill.kml", "mesa-lab.kml" ]
   # kmlFilenames = [ "GV_flighttrack.kml", "gold-hill.kml" ]
 
-  kmlFilenames = ['ge.facility_locations.201312111200.soundings.kml']
+  # kmlFilenames = ['ge.facility_locations.201312111200.soundings.kml', 'ge.COSMIC.201312130000.soundings.kml']
+
+  # kmlFilenames = ['GV_RF02.kml']
 
   # kmlFilenames = ['ge.DOW6.201312061818.DBZ_radar_only.kml', 'ge.DOW7.201311280108.RHOHV_radar_only.kml', 'ge.research.201205090000.N677F_flight_track.kml']
 
-  groundOverlayFilenames = ['catmap.ge.DOW6.201312071606.NCP_radar_only.kml', 'catmap.ge.DOW7.201312071633.NCP_radar_only.kml']
+  groundOverlayFilenames = []
+  # groundOverlayFilenames = ['catmap.ge.DOW6.201312071606.NCP_radar_only.kml', 'catmap.ge.DOW7.201312071633.NCP_radar_only.kml']
 
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
+  kmlFilenames = []
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml",
   #   "ge.research.201205111738.NA817_flight_track.kml",
@@ -266,24 +273,47 @@ CATMAP.load_map = (map_div_name) ->
     # West: 130E
     # East: 150W
 
-    latLonBounds4km = [130.5+(360*multiplier), -63.5, 360-150.5+(360*multiplier), -17.84]
-    mtsatBounds4km = new OpenLayers.Bounds(latLonBounds4km).transform(geoProj, mercProj)
+    images = ['img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png']
 
-    for image in mtsat4kmImages
+    # latLonCamChemBounds = [51.0857,-47.5559,-71.0857,52.175]
+    # camChemBounds = new OpenLayers.Bounds(latLonCamChemBounds).transform(geoProj, mercProj)
+    # camChemImage  = new OpenLayers.Layer.Image(
+    #     'img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png',
+    #     'img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png',
+    #     camChemBounds,
+    #     new OpenLayers.Size(0,0),
+    #       isBaseLayer:   false
+    #       alwaysInRange: true
+    #       wrapDateLine:  true
+    #     )
+    # map.addLayers [camChemImage]
+    # camChemImage.setOpacity .5
 
-      mtsat4kmLayer = new OpenLayers.Layer.Image(
+    # [left, bottom, right, top]
+    latLonBounds = [51.0857+(360*multiplier), -47.5559, 360-71.0857+(360*multiplier), 52.175]
+
+
+    bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
+
+    for image in images
+
+      imageLayer = new OpenLayers.Layer.Image(
         image,
         image,
-        mtsatBounds4km,
+        bounds,
         new OpenLayers.Size(2200,1800),
           isBaseLayer:   false
           alwaysInRange: true
           wrapDateLine:  true
         )
+
+
+
+
       # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
 
-      # map.addLayers [ mtsat4kmLayer ]
-      # mtsat4kmLayer.setOpacity .5
+      map.addLayers [ imageLayer ]
+      imageLayer.setOpacity .5
 
 
 
@@ -335,20 +365,22 @@ CATMAP.load_map = (map_div_name) ->
   # E: -71.1603613650091
   # W: -84.0830386349909
 
-  latLonOwlesGoesBounds = [-84.0830386349909,38.8520916019916,-71.1603613650091,48.1931765247953]
-  owlesGoesBounds = new OpenLayers.Bounds(latLonOwlesGoesBounds).transform(geoProj, mercProj)
-  owlesGoesImage  = new OpenLayers.Layer.Image(
-      'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg',
-      'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg',
-      owlesGoesBounds,
-      new OpenLayers.Size(800,800),
-        isBaseLayer:   false
-        alwaysInRange: true
-        wrapDateLine:  true
-      )
-  map.addLayers [owlesGoesImage]
-  owlesGoesImage.setOpacity .5
+  # latLonOwlesGoesBounds = [-84.0830386349909,38.8520916019916,-71.1603613650091,48.1931765247953]
+  # owlesGoesBounds = new OpenLayers.Bounds(latLonOwlesGoesBounds).transform(geoProj, mercProj)
+  # owlesGoesImage  = new OpenLayers.Layer.Image(
+  #     'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg',
+  #     'img/ops.GOES-13.201310282002.1km_ch1_vis.jpg',
+  #     owlesGoesBounds,
+  #     new OpenLayers.Size(800,800),
+  #       isBaseLayer:   false
+  #       alwaysInRange: true
+  #       wrapDateLine:  true
+  #     )
+  # map.addLayers [owlesGoesImage]
+  # owlesGoesImage.setOpacity .5
 
+  # contrastImages
+  # The coordinates for each corner of the whole image are lower-left (94.3286 E, 47.5559 S), upper-left (71.0857 E, 52.1575 N), upper-right (51.0857 W, 52.1575 N), lower-right (74.3286 W, 47.5559 S).
 
 
   return map
