@@ -93,7 +93,7 @@ CATMAP.load_map = (map_div_name) ->
   guam = new OpenLayers.LonLat 144.8, 13.5
   center = guam
 
-  map.setCenter center.transform(geoProj, mercProj), 6
+  map.setCenter center.transform(geoProj, mercProj), 4
 
   # kml-layer styling
   # colors = [ 'ff0000', '00ff00', '0000ff', 'ffd700', 'ff00ff', '00ffff' ]
@@ -273,7 +273,8 @@ CATMAP.load_map = (map_div_name) ->
     # West: 130E
     # East: 150W
 
-    images = ['img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png']
+    # images = ['img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png']
+    images = ['img/model.CAMChem_NCAR_1deg.201401090000.072_200hPa_OH_gis.png']
 
     # latLonCamChemBounds = [51.0857,-47.5559,-71.0857,52.175]
     # camChemBounds = new OpenLayers.Bounds(latLonCamChemBounds).transform(geoProj, mercProj)
@@ -290,7 +291,9 @@ CATMAP.load_map = (map_div_name) ->
     # camChemImage.setOpacity .5
 
     # [left, bottom, right, top]
-    latLonBounds = [51.0857+(360*multiplier), -47.5559, 360-71.0857+(360*multiplier), 52.175]
+
+    # lower-left (88 E, 39.1795 S), upper-left (88 E, 58.2806 N), upper-right (68 W, 58.2806 N), lower-right (68 W, 39.1795 S)
+    latLonBounds = [88+(360*multiplier), -39.1795, 360-68+(360*multiplier), 58.2806]
 
 
     bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
@@ -307,14 +310,10 @@ CATMAP.load_map = (map_div_name) ->
           wrapDateLine:  true
         )
 
-
-
-
       # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
 
       map.addLayers [ imageLayer ]
       imageLayer.setOpacity .5
-
 
 
     # Pixel Height: 1,007

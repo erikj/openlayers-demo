@@ -34,7 +34,7 @@
     oswego = new OpenLayers.LonLat(-76.5, 43.45);
     guam = new OpenLayers.LonLat(144.8, 13.5);
     center = guam;
-    map.setCenter(center.transform(geoProj, mercProj), 6);
+    map.setCenter(center.transform(geoProj, mercProj), 4);
     kmlDir = "kml";
     groundOverlayFilenames = [];
     kmlFilenames = [];
@@ -119,8 +119,8 @@
     mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg'];
     for (_l = 0, _len3 = multipliers.length; _l < _len3; _l++) {
       multiplier = multipliers[_l];
-      images = ['img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png'];
-      latLonBounds = [51.0857 + (360 * multiplier), -47.5559, 360 - 71.0857 + (360 * multiplier), 52.175];
+      images = ['img/model.CAMChem_NCAR_1deg.201401090000.072_200hPa_OH_gis.png'];
+      latLonBounds = [88 + (360 * multiplier), -39.1795, 360 - 68 + (360 * multiplier), 58.2806];
       bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj);
       for (_m = 0, _len4 = images.length; _m < _len4; _m++) {
         image = images[_m];
