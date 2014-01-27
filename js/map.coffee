@@ -300,10 +300,10 @@ CATMAP.load_map = (map_div_name) ->
     # S: 11.0 N
     # E: 154.9E
     # W: 134.95 E
-    left   = 134.7
-    bottom = 5.75
+    left   = 134.695
+    bottom = 5.738
     right  = 154.91
-    top    = 20.98
+    top    = 20.9845
     latLonBounds = [left+(360*multiplier), bottom, right+(360*multiplier), top]
 
     bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)

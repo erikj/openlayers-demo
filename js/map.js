@@ -121,10 +121,10 @@
     for (_l = 0, _len3 = multipliers.length; _l < _len3; _l++) {
       multiplier = multipliers[_l];
       images = ['img/model.CAMChem_NCAR_1deg.201401090000.072_200hPa_OH_gis.png'];
-      left = 134.7;
-      bottom = 5.75;
+      left = 134.695;
+      bottom = 5.738;
       right = 154.91;
-      top = 20.98;
+      top = 20.9845;
       latLonBounds = [left + (360 * multiplier), bottom, right + (360 * multiplier), top];
       bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj);
       for (_m = 0, _len4 = mtsat2Images.length; _m < _len4; _m++) {
