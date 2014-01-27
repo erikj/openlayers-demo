@@ -93,7 +93,7 @@ CATMAP.load_map = (map_div_name) ->
   guam = new OpenLayers.LonLat 144.8, 13.5
   center = guam
 
-  map.setCenter center.transform(geoProj, mercProj), 4
+  map.setCenter center.transform(geoProj, mercProj), 6
 
   # kml-layer styling
   # colors = [ 'ff0000', '00ff00', '0000ff', 'ffd700', 'ff00ff', '00ffff' ]
@@ -248,6 +248,7 @@ CATMAP.load_map = (map_div_name) ->
   multipliers = [-1, 0]
 
   mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg']
+  mtsat2Images = ['img/ops.MTSAT-2.201401272201.CONTRAST_GUAM_ch1_vis.jpg']
   # mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg']
 
   for multiplier in multipliers
@@ -293,12 +294,21 @@ CATMAP.load_map = (map_div_name) ->
     # [left, bottom, right, top]
 
     # lower-left (88 E, 39.1795 S), upper-left (88 E, 58.2806 N), upper-right (68 W, 58.2806 N), lower-right (68 W, 39.1795 S)
-    latLonBounds = [88+(360*multiplier), -39.1795, 360-68+(360*multiplier), 58.2806]
+    # latLonBounds = [88+(360*multiplier), -39.1795, 360-68+(360*multiplier), 58.2806]
 
+    # N: 20.9 N
+    # S: 11.0 N
+    # E: 154.9E
+    # W: 134.95 E
+    left   = 134.7
+    bottom = 5.75
+    right  = 154.91
+    top    = 20.98
+    latLonBounds = [left+(360*multiplier), bottom, right+(360*multiplier), top]
 
     bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
 
-    for image in images
+    for image in mtsat2Images
 
       imageLayer = new OpenLayers.Layer.Image(
         image,

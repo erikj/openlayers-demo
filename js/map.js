@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var bounds, center, controls, darwin, geoProj, groundOverlayFilenames, guam, i, image, imageLayer, images, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, latLonBounds, layerSwitcher, map, mercProj, mtsat4kmImages, multiplier, multipliers, ocm, osm, osmResolutions, oswego, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m;
+    var bottom, bounds, center, controls, darwin, geoProj, groundOverlayFilenames, guam, i, image, imageLayer, images, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, latLonBounds, layerSwitcher, left, map, mercProj, mtsat2Images, mtsat4kmImages, multiplier, multipliers, ocm, osm, osmResolutions, oswego, right, top, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m;
 
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
@@ -34,7 +34,7 @@
     oswego = new OpenLayers.LonLat(-76.5, 43.45);
     guam = new OpenLayers.LonLat(144.8, 13.5);
     center = guam;
-    map.setCenter(center.transform(geoProj, mercProj), 4);
+    map.setCenter(center.transform(geoProj, mercProj), 6);
     kmlDir = "kml";
     groundOverlayFilenames = [];
     kmlFilenames = [];
@@ -117,13 +117,18 @@
     kmlSelector.activate();
     multipliers = [-1, 0];
     mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg'];
+    mtsat2Images = ['img/ops.MTSAT-2.201401272201.CONTRAST_GUAM_ch1_vis.jpg'];
     for (_l = 0, _len3 = multipliers.length; _l < _len3; _l++) {
       multiplier = multipliers[_l];
       images = ['img/model.CAMChem_NCAR_1deg.201401090000.072_200hPa_OH_gis.png'];
-      latLonBounds = [88 + (360 * multiplier), -39.1795, 360 - 68 + (360 * multiplier), 58.2806];
+      left = 134.7;
+      bottom = 5.75;
+      right = 154.91;
+      top = 20.98;
+      latLonBounds = [left + (360 * multiplier), bottom, right + (360 * multiplier), top];
       bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj);
-      for (_m = 0, _len4 = images.length; _m < _len4; _m++) {
-        image = images[_m];
+      for (_m = 0, _len4 = mtsat2Images.length; _m < _len4; _m++) {
+        image = mtsat2Images[_m];
         imageLayer = new OpenLayers.Layer.Image(image, image, bounds, new OpenLayers.Size(2200, 1800), {
           isBaseLayer: false,
           alwaysInRange: true,
