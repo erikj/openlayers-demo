@@ -1,0 +1,13 @@
+-# compile to html:
+-# $ haml latlon.haml > latlon.html
+!!! 5
+%html
+  %head
+    %title OpenLayers latlon Example
+    %script{ src: "http://openlayers.org/api/OpenLayers.js" }
+    %script{ src: "http://cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/proj4js-compressed.js" }
+    %link{ rel: "stylesheet", href: "css/map.css", type: "text/css" }
+
+  %body
+    #map
+    %script{ src: "js/latlon.js" }
