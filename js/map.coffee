@@ -20,17 +20,23 @@ CATMAP.load_map = (map_div_name) ->
   CATMAP.mercProj = mercProj
   # initialize openlayers map
   layerSwitcher = new OpenLayers.Control.LayerSwitcher
+  CATMAP.graticuleControl = new OpenLayers.Control.Graticule
   controls = [ #new OpenLayers.Control.MousePosition({displayProjection:geoProj})
                                             # display lat/lon of mouse's map position in lower-right corner
     # new OpenLayers.Control.OverviewMap      # toggled, lower-right corner
     new OpenLayers.Control.KeyboardDefaults # +/- zoom in/out, move map via arrow keys
     # new OpenLayers.Control.Zoom
-    new OpenLayers.Control.Graticule
+    CATMAP.graticuleControl
     layerSwitcher   # toggled, upper-right corner, base-layer select, and vector and image checkboxes
     new OpenLayers.Control.Navigation ]     # move map, zoom in/out w/ via mouse input
 
   map = new OpenLayers.Map map_div_name,
       controls:controls
+  CATMAP.graticuleControl.deactivate()
+
+
+  setInterval "CATMAP.graticuleControl.activate()", 1000
+
 
   layerSwitcher.maximizeControl()
   CATMAP.map = map
@@ -47,6 +53,7 @@ CATMAP.load_map = (map_div_name) ->
 
   # osm = new OpenLayers.Layer.OSM()
   osm = new OpenLayers.Layer.OSM 'Open Street Map', null, {
+  # osm = new OpenLayers.Layer.OSM 'Open Street Map', "http://localhost/osm_tiles/${z}/${x}/${y}.png", {
     resolutions:       osmResolutions,
     serverResolutions: osmResolutions,
     transitionEffect: 'resize',
@@ -68,6 +75,20 @@ CATMAP.load_map = (map_div_name) ->
     ]
 
   map.addLayer ocm
+  # makePlaneMarker()
+  # planeLayer = newPlaneLayer()
+
+  # map.addLayer planeLayer
+  # # icon = planeLayer.getFeatureByFid('gv-icon')
+  # console.log 'AA'
+  # icon = planeLayer.getFeaturesByAttribute('name', 'gv-icon')[0]
+  # console.log icon
+  # console.log 'AB'
+  # lonLat = new OpenLayers.LonLat(-105, 40).transform(CATMAP.geoProj, CATMAP.mercProj)
+  # console.log 'AC'
+  # # icon.move( lonLat)
+  # # icon.lonlat = lonLat
+  # console.log 'AD'
 
 
   # google-maps layers
@@ -80,18 +101,18 @@ CATMAP.load_map = (map_div_name) ->
 
   # map.addLayers [ gterr, gmap, ghyb, gsat ]
 
-  # boulder = new OpenLayers.LonLat -105.3, 40.028
+  boulder = new OpenLayers.LonLat -105.3, 40.028
   # salina  = new OpenLayers.LonLat -97.6459, 38.7871
   # christchurch = new OpenLayers.LonLat 172.620278, -43.53
-  # center  = boulder
+  center  = boulder
   # center  = christchurch
   # nexradCenter = new OpenLayers.LonLat -103, 39
   # center = nexradCenter
-  darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
-  oswego = new OpenLayers.LonLat -76.5, 43.45 # 43°27′17″N 76°30′24″W
-  # guam: 13.5000° N, 144.8000° E
-  guam = new OpenLayers.LonLat 144.8, 13.5
-  center = guam
+  # darwin = new OpenLayers.LonLat 130.833, -12.45 #12°27′0″S 130°50′0″E
+  # oswego = new OpenLayers.LonLat -76.5, 43.45 # 43°27′17″N 76°30′24″W
+  # # guam: 13.5000° N, 144.8000° E
+  # guam = new OpenLayers.LonLat 144.8, 13.5
+  # center = guam
 
   map.setCenter center.transform(geoProj, mercProj), 6
 
@@ -115,7 +136,14 @@ CATMAP.load_map = (map_div_name) ->
 
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
-  kmlFilenames = []
+  kmlFilenames = ['gis.InciWeb.201709181336.Current_Incidents.kml', 'gis.NSF_NCAR_C130.201709211932.flight_track.kml']
+
+  kmlFilenames = ['gis.RV_Investigator.201801042000.track.kml']
+
+
+
+
+  # kmlFilenames = ['potential_mobile_sites.kml']
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml",
   #   "ge.research.201205111738.NA817_flight_track.kml",
@@ -251,6 +279,8 @@ CATMAP.load_map = (map_div_name) ->
   mtsat2Images = ['img/ops.MTSAT-2.201401272201.CONTRAST_GUAM_ch1_vis.jpg']
   # mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg']
 
+  goesCoImages = ['img/satellite.GOES-13.201610042137.1km_CO_ch1_vis.jpg']
+
   for multiplier in multipliers
     # latLonBounds2km = [161.0289+(360*multiplier), -46.54, 178.9711+(360*multiplier), -32.76]
     # mtsatBounds2km = new OpenLayers.Bounds(latLonBounds2km).transform(geoProj, mercProj)
@@ -300,15 +330,24 @@ CATMAP.load_map = (map_div_name) ->
     # S: 11.0 N
     # E: 154.9E
     # W: 134.95 E
-    left   = 134.695
-    bottom = 5.738
-    right  = 154.91
-    top    = 20.9845
+    # left   = 134.695
+    # bottom = 5.738
+    # right  = 154.91
+    # top    = 20.9845
+
+
+    left =   -109.46
+    bottom = 36.45
+    right =  -100.5
+    top =    43.35
+
     latLonBounds = [left+(360*multiplier), bottom, right+(360*multiplier), top]
 
     bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
 
-    for image in mtsat2Images
+    # for image in mtsat2Images
+    for image in goesCoImages
+      # for image in []
 
       imageLayer = new OpenLayers.Layer.Image(
         image,
@@ -401,6 +440,8 @@ onFeatureSelect = (event) ->
   # console.log "featureselected"
   content = "<h2>" + feature.attributes.name + "</h2>" + feature.attributes.description
 
+  console.log feature
+
   console.log feature.attributes.description
 
   popup = new OpenLayers.Popup.FramedCloud "chickenXXX",
@@ -421,3 +462,50 @@ onFeatureUnselect = (event) ->
     CATMAP.map.removePopup feature.popup
     feature.popup.destroy()
     delete feature.popup
+
+
+newPlaneLayer = () ->
+
+  console.log 'A'
+  planeLayer = new OpenLayers.Layer.Vector('gv-layer',
+      visibility: true,
+      displayInLayerSwitcher: true,
+      'calculateInRange': () ->
+        return true
+      numZoomLevels: 18
+  )
+
+  console.log 'B'
+  icon = new OpenLayers.Feature.Vector(
+    new OpenLayers.Geometry.Point(-105, 40).transform(CATMAP.geoProj, CATMAP.mercProj),
+    {
+      name: 'gv-icon',
+      description: "plane description"
+    },
+    {
+      externalGraphic: 'img/blueplane.png',
+      graphicWidth: 30,
+      graphicHeight: 30,
+      graphicOpacity: 0.8
+    }
+  )
+  icon.style.rotation = '-450'
+  console.log 'C'
+  # icon.attributes =
+
+  console.log 'D'
+  # lonLat = new OpenLayers.LonLat(-105, 40).transform(CATMAP.geoProj, CATMAP.mercProj)
+  # icon.lonlat = lonLat
+  planeLayer.addFeatures [icon]
+  console.log 'E'
+
+  return planeLayer
+
+makePlaneMarker = () ->
+
+  lonLat = new OpenLayers.LonLat(-105, 40).transform(CATMAP.geoProj, CATMAP.mercProj)
+  markers = new OpenLayers.Layer.Markers( 'Markers' );
+  CATMAP.map.addLayer(markers);
+  iconSize = OpenLayers.Size(30,30)
+  icon = OpenLayers.Icon('img/blueplane.png', iconSize)
+  markers.addMarker( new OpenLayers.Marker(lonLat, icon) )
