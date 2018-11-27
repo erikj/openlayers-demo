@@ -279,7 +279,8 @@ CATMAP.load_map = (map_div_name) ->
   # sas1kmCh1SeLayer.setOpacity .5
 
   # multipliers = [-2, -1, 0, 1, 2]
-  multipliers = [-1, 0]
+  # multipliers = [-1, 0]
+  multipliers = [0]
 
   mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg']
   mtsat2Images = ['img/ops.MTSAT-2.201401272201.CONTRAST_GUAM_ch1_vis.jpg']
@@ -368,7 +369,7 @@ CATMAP.load_map = (map_div_name) ->
       # for image in []
 
       imageLayer = new OpenLayers.Layer.Image(
-        image,
+        'adjusted',
         image,
         bounds,
         new OpenLayers.Size(2200,1800),
@@ -381,6 +382,38 @@ CATMAP.load_map = (map_div_name) ->
 
       map.addLayers [ imageLayer ]
       imageLayer.setOpacity .5
+
+    #   new google.maps.LatLng(-37.49747577933491,-71.74932632043229),
+    # new google.maps.LatLng(-31.18903475404245,-64.69171692441731));
+
+    bottom = -37.49747577933491
+    left = -71.74932632043229
+    top = -31.18903475404245
+    right = -64.69171692441731
+
+    latLonBounds = [left+(360*multiplier), bottom, right+(360*multiplier), top]
+
+    bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
+
+
+    for image in images
+      # for image in []
+
+      imageLayer = new OpenLayers.Layer.Image(
+        'original',
+        image,
+        bounds,
+        new OpenLayers.Size(2200,1800),
+          isBaseLayer:   false
+          alwaysInRange: true
+          wrapDateLine:  true
+        )
+
+      # console.log "mtsat4kmCh1Layer.wrapDateLine #{mtsat4kmCh1Layer.wrapDateLine}"
+
+      map.addLayers [ imageLayer ]
+      imageLayer.setOpacity .5
+
 
 
     # Pixel Height: 1,007

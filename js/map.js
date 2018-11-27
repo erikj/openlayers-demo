@@ -7,7 +7,7 @@
   this.CATMAP = CATMAP;
 
   CATMAP.load_map = function(map_div_name) {
-    var bottom, boulder, bounds, center, controls, geoProj, goesCoImages, groundOverlayFilenames, i, image, imageLayer, images, j, k, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, l, latLonBounds, layerSwitcher, left, len, len1, len2, len3, len4, m, map, mendoza, mercProj, mtsat2Images, mtsat4kmImages, multiplier, multipliers, n, ocm, osm, osmResolutions, right, top;
+    var bottom, boulder, bounds, center, controls, geoProj, goesCoImages, groundOverlayFilenames, i, image, imageLayer, images, j, k, kmlDir, kmlFilename, kmlFilenames, kmlLayer, kmlLayers, kmlSelector, kmlUrl, l, latLonBounds, layerSwitcher, left, len, len1, len2, len3, len4, len5, m, map, mendoza, mercProj, mtsat2Images, mtsat4kmImages, multiplier, multipliers, n, o, ocm, osm, osmResolutions, right, top;
     geoProj = new OpenLayers.Projection("EPSG:4326");
     mercProj = new OpenLayers.Projection("EPSG:900913");
     CATMAP.geoProj = geoProj;
@@ -117,7 +117,7 @@
     kmlSelector = new OpenLayers.Control.SelectFeature(kmlLayers);
     map.addControl(kmlSelector);
     kmlSelector.activate();
-    multipliers = [-1, 0];
+    multipliers = [0];
     mtsat4kmImages = ['img/ops.MTSAT-2.201308012032.ch1_vis.jpg', 'img/ops.MTSAT-2.201308012032.ch2_thermal_IR.jpg', 'img/ops.MTSAT-2.201308012032.ch4_water_vapor.jpg'];
     mtsat2Images = ['img/ops.MTSAT-2.201401272201.CONTRAST_GUAM_ch1_vis.jpg'];
     goesCoImages = ['img/satellite.GOES-13.201610042137.1km_CO_ch1_vis.jpg'];
@@ -133,7 +133,23 @@
       bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj);
       for (n = 0, len4 = images.length; n < len4; n++) {
         image = images[n];
-        imageLayer = new OpenLayers.Layer.Image(image, image, bounds, new OpenLayers.Size(2200, 1800), {
+        imageLayer = new OpenLayers.Layer.Image('adjusted', image, bounds, new OpenLayers.Size(2200, 1800), {
+          isBaseLayer: false,
+          alwaysInRange: true,
+          wrapDateLine: true
+        });
+        map.addLayers([imageLayer]);
+        imageLayer.setOpacity(.5);
+      }
+      bottom = -37.49747577933491;
+      left = -71.74932632043229;
+      top = -31.18903475404245;
+      right = -64.69171692441731;
+      latLonBounds = [left + (360 * multiplier), bottom, right + (360 * multiplier), top];
+      bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj);
+      for (o = 0, len5 = images.length; o < len5; o++) {
+        image = images[o];
+        imageLayer = new OpenLayers.Layer.Image('original', image, bounds, new OpenLayers.Size(2200, 1800), {
           isBaseLayer: false,
           alwaysInRange: true,
           wrapDateLine: true
