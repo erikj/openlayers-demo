@@ -104,7 +104,9 @@ CATMAP.load_map = (map_div_name) ->
   boulder = new OpenLayers.LonLat -105.3, 40.028
   # salina  = new OpenLayers.LonLat -97.6459, 38.7871
   # christchurch = new OpenLayers.LonLat 172.620278, -43.53
-  center  = boulder
+  mendoza =  new OpenLayers.LonLat -68.0, -35.0
+  # dateline = new OpenLayers.LonLat -180, 0
+  center  = mendoza
   # center  = christchurch
   # nexradCenter = new OpenLayers.LonLat -103, 39
   # center = nexradCenter
@@ -136,10 +138,14 @@ CATMAP.load_map = (map_div_name) ->
 
 
   # kmlFilenames = [ "ge.research.201205090000.N677F_flight_track.kml" ]
-  kmlFilenames = ['gis.InciWeb.201709181336.Current_Incidents.kml', 'gis.NSF_NCAR_C130.201709211932.flight_track.kml']
+  # kmlFilenames = ['gis.InciWeb.201709181336.Current_Incidents.kml', 'gis.NSF_NCAR_C130.201709211932.flight_track.kml']
 
-  kmlFilenames = ['gis.RV_Investigator.201801042000.track.kml']
+  # kmlFilenames = ['gis.RV_Investigator.201801042000.track.kml']
+  kmlFilenames = []
+  # drawLinestring [170,0], [179,0]
+  drawLinestring()
 
+  drawLinestring([-180,10], [-180,-10], '#ff9900')
 
 
 
@@ -307,6 +313,8 @@ CATMAP.load_map = (map_div_name) ->
     # images = ['img/model.CAMChem_NCAR_1deg.201401090000.000_200hPa_BrO_gis.png']
     images = ['img/model.CAMChem_NCAR_1deg.201401090000.072_200hPa_OH_gis.png']
 
+    images = ['img/radar.SMN_AR_Radar.201811262216.Mendoza_Reflectivity.gif']
+
     # latLonCamChemBounds = [51.0857,-47.5559,-71.0857,52.175]
     # camChemBounds = new OpenLayers.Bounds(latLonCamChemBounds).transform(geoProj, mercProj)
     # camChemImage  = new OpenLayers.Layer.Image(
@@ -336,17 +344,27 @@ CATMAP.load_map = (map_div_name) ->
     # top    = 20.9845
 
 
-    left =   -109.46
-    bottom = 36.45
-    right =  -100.5
-    top =    43.35
+    # left =   -109.46
+    # bottom = 36.45
+    # right =  -100.5
+    # top =    43.35
+
+    #   new google.maps.LatLng(-37.49747577933491,-71.74932632043229),
+    # new google.maps.LatLng(-31.18903475404245,-64.69171692441731));
+
+
+    top = -31.27
+    bottom = -37.42
+    left = -71.67
+    # right = -64.69171
+    right = -65.17
 
     latLonBounds = [left+(360*multiplier), bottom, right+(360*multiplier), top]
 
     bounds = new OpenLayers.Bounds(latLonBounds).transform(geoProj, mercProj)
 
     # for image in mtsat2Images
-    for image in goesCoImages
+    for image in images
       # for image in []
 
       imageLayer = new OpenLayers.Layer.Image(
@@ -509,3 +527,115 @@ makePlaneMarker = () ->
   iconSize = OpenLayers.Size(30,30)
   icon = OpenLayers.Icon('img/blueplane.png', iconSize)
   markers.addMarker( new OpenLayers.Marker(lonLat, icon) )
+
+
+straightPath = (startPoint, endPoint) ->
+  console.log "straightPath()"
+  console.log startPoint
+  console.log endPoint
+  # Do we cross the dateline? If yes, then flip endPoint across it
+  if Math.abs(startPoint.x - (endPoint.x)) > 180
+    if startPoint.x < endPoint.x
+      endPoint.x -= 360
+    else
+      endPoint.x += 360
+  [
+    startPoint
+    endPoint
+  ]
+
+XdrawLinestring = (start, end) ->
+  console.log "drawLinestring()"
+  console.log start
+  console.log end
+
+  geoProjection  = new OpenLayers.Projection "EPSG:4326"
+
+
+  cList = straightPath(new OpenLayers.Geometry.Point(start[0], start[1]), new OpenLayers.Geometry.Point(end[0], end[1]))
+  console.log cList
+  cFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.LineString(cList), null,
+    strokeColor: "#0000ff"
+    strokeOpacity: 0.7
+    strokeWidth: 4
+    strokeDashstyle: "longdash"
+  )
+
+  features = [cFeature]
+  #
+  # Path is in or extends into east (+) half, so we have to make a -360 copy
+  #
+  # if start[0] > 0 or end[0] > 0
+  #   wList = straightPath(new (OpenLayers.Geometry.Point)(start[0] - 360, start[1]), new (OpenLayers.Geometry.Point)(end[0] - 360, end[1]))
+  #   features.push new (OpenLayers.Feature.Vector)(new (OpenLayers.Geometry.LineString)(wList))
+
+  #
+  # Path is in or extends into west (-) half, so we have to make a +360 copy
+  #
+  # if start[0] < 0 or end[0] < 0
+  #   eList = straightPath(new (OpenLayers.Geometry.Point)(start[0] + 360, start[1]), new (OpenLayers.Geometry.Point)(end[0] + 360, end[1]))
+
+  #   features.push new (OpenLayers.Feature.Vector)(new (OpenLayers.Geometry.LineString)(eList))
+
+  # startLocation = new OpenLayers.Geometry.Point(start[0], start[1]) \
+  #   .transform geoProjection, CATMAP.map.getProjectionObject()
+
+  # endLocation = new OpenLayers.Geometry.Point(end[0], end[1]) \
+  #   .transform geoProjection, CATMAP.map.getProjectionObject()
+
+  # linestringFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString( [ startLocation, endLocation ]), null,
+  #   strokeColor: "#0000ff"
+  #   strokeOpacity: 0.7
+  #   strokeWidth: 4
+  #   strokeDashstyle: "longdash"
+  # )
+
+  linestringLayer = new OpenLayers.Layer.Vector "Measure Lines",
+    visibility: true
+    displayInLayerSwitcher: false
+
+  # linestringLayer.addFeatures [linestringFeature]
+  linestringLayer.addFeatures features
+  CATMAP.map.addLayers [linestringLayer]
+
+drawLinestring = (start = [170,0], end = [190,0], color = "#0000ff") ->
+  # start = [-179,0]
+  # end = [170,0]
+
+  console.log "drawLinestring()"
+  console.log start
+  console.log end
+
+  if Math.abs( start[0] - end[0]) > 180
+    end[0] += if start[0] < end[0]
+      -360
+    else
+      360
+    console.log "adjusted longitude: #{end[0]}"
+
+
+
+
+  geoProjection  = new OpenLayers.Projection "EPSG:4326"
+
+  startLocation = new OpenLayers.Geometry.Point(start[0], start[1]) \
+    .transform geoProjection, CATMAP.map.getProjectionObject()
+
+  endLocation = new OpenLayers.Geometry.Point(end[0], end[1]) \
+    .transform geoProjection, CATMAP.map.getProjectionObject()
+
+  linestringFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString( [ startLocation, endLocation ]), null,
+    strokeColor: color
+    strokeOpacity: 1
+    strokeWidth: 4
+    # strokeDashstyle: "longdash"
+  )
+
+  linestringLayer = new OpenLayers.Layer.Vector "Measure Lines",
+    visibility: true
+    displayInLayerSwitcher: false
+
+  linestringLayer.addFeatures [linestringFeature]
+
+  CATMAP.map.addLayers [linestringLayer]
+
