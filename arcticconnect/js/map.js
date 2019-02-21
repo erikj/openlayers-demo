@@ -7,7 +7,7 @@
   this.map = map;
 
   map.init = function(divName, projectionLabel, offsetLabel) {
-    var labelEl, tiles;
+    var extent, labelEl, maxExtent, tiles, worldExtent;
     if (divName == null) {
       divName = 'map';
     }
@@ -17,7 +17,7 @@
     if (offsetLabel == null) {
       offsetLabel = '0';
     }
-    console.log('map.init()');
+    console.log("map.init(" + divName + ", " + projectionLabel + ", " + offsetLabel + ")");
     labelEl = document.getElementById('projection-label');
     labelEl.innerHTML = "EPSG:" + projectionLabel;
     labelEl.innerHTML += " (" + offsetLabel + ")";
@@ -27,24 +27,33 @@
     Proj4js.defs['EPSG:3574'] = '+proj=laea +lat_0=90 +lon_0=-40 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs';
     Proj4js.defs['EPSG:3575'] = '+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs';
     Proj4js.defs['EPSG:3576'] = '+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs';
+    extent = 11000000 + 9036842.762 + 667;
+    console.log("extent: " + extent);
+    maxExtent = [-extent, -extent, extent, extent];
+    worldExtent = [-180, 0, 180, 90];
+    worldExtent = [-180.0000, 45.0000, 180.0000, 90.0000];
+    OpenLayers.Projection.defaults["EPSG:3574"] = {
+      maxExtent: maxExtent,
+      worldExtent: worldExtent
+    };
+    OpenLayers.Projection.defaults["EPSG:4326"].worldExtent = worldExtent;
     map = new OpenLayers.Map('map', {
-      controls: [
-        new OpenLayers.Control.Navigation, new OpenLayers.Control.PanZoomBar, new OpenLayers.Control.Attribution, new OpenLayers.Control.ScaleLine, new OpenLayers.Control.Permalink({
-          anchor: true
-        })
-      ],
+      controls: [new OpenLayers.Control.Navigation(), new OpenLayers.Control.PanZoomBar(), new OpenLayers.Control.Attribution(), new OpenLayers.Control.ScaleLine()],
       projection: "EPSG:" + projectionLabel,
       displayProjection: 'EPSG:4326'
     });
     tiles = new OpenLayers.Layer.XYZ("EPSG:" + projectionLabel, "http://a.tiles.arcticconnect.ca/osm_" + projectionLabel + "/${z}/${x}/${y}.png", {
       projection: "EPSG:" + projectionLabel,
-      maxExtent: [-3000000, -3000000, 3000000, 3000000],
-      attribution: 'Map © <a href=\'http://arcticconnect.ca/\'>ArcticConnect</a>. Data © <a href=\'http://www.openstreetmap.org/\'>OpenStreetMap</a> contributors',
+      maxExtent: maxExtent,
+      worldExtent: worldExtent,
+      attribution: 'Map &copy; <a href=\'http://arcticconnect.ca/\'>ArcticConnect</a>. Data &copy; <a href=\'http://www.openstreetmap.org/\'>OpenStreetMap</a> contributors',
       numZoomLevels: 10,
       transitionEffect: 'resize'
     });
     map.addLayer(tiles);
+    map.addControl(new OpenLayers.Control.Graticule());
     if (!map.getCenter()) {
+      console.log('map.setCenter()');
       map.setCenter(new OpenLayers.LonLat(0, 0), 1);
     }
     return map.zoomTo(4);
