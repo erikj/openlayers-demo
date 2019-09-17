@@ -41,7 +41,7 @@ From the projection-specific pages, the OpenLayers JavaScript is invoked by call
 <body onload="map.init('map', 3571, 180);">
 ```
 
-`map.init` takes three arguments:
+`map.init()` takes three arguments:
 
 - `divName` the DOM ID of the element in which the map should be drawn
 - `projectionLabel`: the EPSG projection that should be used, e.g. `3571`
